@@ -26,6 +26,14 @@
         {
             "name": "xf-port-zephyr",
             "path": "../../src/xf/port/zephyr"
+        },
+        {
+            "name": "mdw",
+            "path": "../../src/mdw"
+        },
+        {
+            "name": "platform-f7-discozephyr",
+            "path": "../../src/platform/f7-discozephyr"
         }
     ],
     "settings": {
