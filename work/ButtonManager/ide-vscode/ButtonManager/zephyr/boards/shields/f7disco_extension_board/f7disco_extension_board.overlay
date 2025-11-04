@@ -1,0 +1,48 @@
+/*
+ * Copyright (c) 2024 HES-SO Valais, ECS, Sion
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/ {
+    leds {
+        compatible = "gpio-leds";
+
+        ext_led0: ext_led0 {
+            gpios = <&gpioa 15 GPIO_ACTIVE_HIGH>;
+            label = "LED 0";
+        };
+
+        ext_led1: ext_led1 {
+            gpios = <&gpioh 6 GPIO_ACTIVE_HIGH>;
+            label = "LED 1";
+        };
+
+        ext_led2: ext_led2 {
+            gpios = <&gpioa 8 GPIO_ACTIVE_HIGH>;
+            label = "LED 2";
+        };
+
+        ext_led3: ext_led3 {
+            gpios = <&gpiob 4 GPIO_ACTIVE_HIGH>;
+            label = "LED 3";
+        };
+    };
+
+    buttons {
+             compatible = "gpio-keys";
+
+
+            /* TODO: Add buttons for the extension board. */
+     };
+
+    aliases {
+        ext-led0 = &ext_led0;
+        ext-led1 = &ext_led1;
+        ext-led2 = &ext_led2;
+        ext-led3 = &ext_led3;
+        
+
+        /* TODO: Add aliases to buttons needed by the 'board/hal/buttons' package. */
+    };
+};
