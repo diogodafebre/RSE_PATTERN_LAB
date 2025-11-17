@@ -10,7 +10,10 @@
     #include "gui-task.h"
 #endif
 
-// TODO: Add C++ specific includes here
+#include "buttoneventslogger.h"
+
+class ButtonEventsHandler;
+class ButtonsController;
 
 namespace app
 {
@@ -30,8 +33,12 @@ public:
     static GuiTask & getGuiTask();
 #endif
 
+    static ButtonEventsLogger & getButtonEventsLogger();
+    static ButtonEventsHandler & getButtonEventsHandler();
+    static ButtonsController & getButtonsController();
+
 protected:
-    // TODO: Add static attributes here
+    static ButtonEventsLogger * pButtonEventsLogger_;
 };
 
 } /* namespace app */

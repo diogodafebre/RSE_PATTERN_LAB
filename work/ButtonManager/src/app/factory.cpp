@@ -1,5 +1,7 @@
 #include "trace/trace.h"
 #include "board/board.h"
+#include "board/buttonscontroller.h"
+#include "mdw/button/buttoneventshandler.h"
 #if defined(CONFIG_LVGL) && (CONFIG_LVGL != 0)
     #include <lvgl.h>
     #include <lvgl_input_device.h>
@@ -16,7 +18,7 @@
 namespace app
 {
 
-// TODO: Define static factory attributes here
+ButtonEventsLogger * Factory::pButtonEventsLogger_ = nullptr;
 
 Factory::Factory()
 {
@@ -31,10 +33,24 @@ void Factory::initialize()
 
     Trace::out("Factory: Initializing app components...");
 
-    // TODO: Initialize factory attributes here
-    
+    // Create ButtonEventsLogger
+    pButtonEventsLogger_ = new ButtonEventsLogger();
+
+    // Subscribe ButtonEventsLogger to ButtonEventsHandler
+    bool success = getButtonEventsHandler().subscribe(&getButtonEventsLogger());
+    assert(success && "Failed to subscribe ButtonEventsLogger");
+
+    // Register callback from ButtonsController to ButtonEventsHandler
+    success = getButtonsController().registerCallback(
+        &getButtonEventsHandler(),
+        &ButtonEventsHandler::onButtonChanged
+    );
+    assert(success && "Failed to register ButtonsController callback");
+
+    Trace::out("Factory: Button system initialized");
+
 #if defined(CONFIG_LVGL) && (CONFIG_LVGL != 0)
-    getGuiTask().initialize(_buttonEventsHandler);
+    getGuiTask().initialize(getButtonEventsHandler());
 #endif
 }
 
@@ -43,8 +59,9 @@ void Factory::build()
 {
     Trace::out("Factory: Starting app components...");
 
-    // Start state machine(s)
-    // TODO: Start state-machines here
+    // Start ButtonEventsHandler and ButtonsController state machines
+    getButtonsController().start();
+    getButtonEventsHandler().start();
 
 #if defined(CONFIG_LVGL) && (CONFIG_LVGL != 0)
     getGuiTask().start();
@@ -61,6 +78,27 @@ GuiTask & Factory::getGuiTask()
     return guiTask;
 }
 #endif // CONFIG_LVGL
+
+// static
+ButtonEventsLogger & Factory::getButtonEventsLogger()
+{
+    assert(pButtonEventsLogger_ && "ButtonEventsLogger not initialized");
+    return *pButtonEventsLogger_;
+}
+
+// static
+ButtonEventsHandler & Factory::getButtonEventsHandler()
+{
+    static ButtonEventsHandler buttonEventsHandler;
+    return buttonEventsHandler;
+}
+
+// static
+ButtonsController & Factory::getButtonsController()
+{
+    static ButtonsController buttonsController;
+    return buttonsController;
+}
 
 } /* namespace app */
 

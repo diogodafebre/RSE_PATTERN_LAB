@@ -16,6 +16,14 @@
             "path": "../../src/interface"
         },
         {
+            "name": "mdw",
+            "path": "../../src/mdw"
+        },
+        {
+            "name": "platform",
+            "path": "../../src/platform"
+        },
+        {
             "name": "xf-includes",
             "path": "../../src/xf/include"
         },
