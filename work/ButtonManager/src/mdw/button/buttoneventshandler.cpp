@@ -121,21 +121,21 @@ void ButtonEventsHandler::onButtonChanged(uint16_t buttonIndex, bool pressed)
 {
     if (buttonIndex < MAX_BUTTONS && buttonStateSm_[buttonIndex])
     {
-        // Trace removed to save stack - happens too frequently
+        Trace::out("ButtonEventsHandler: Button %d changed to %s", buttonIndex, pressed ? "pressed" : "released");
         buttonStateSm_[buttonIndex]->onButtonChanged(pressed);
     }
 }
 
 void ButtonEventsHandler::onButtonShortPressed(uint16_t buttonIndex)
 {
-    // Trace::out("ButtonEventsHandler: Button %d SHORT", buttonIndex);
+    Trace::out("ButtonEventsHandler: Button %d SHORT PRESSED - pushing internal event", buttonIndex);
     // Push internal event to decouple the call
     GEN(evButtonInternal(buttonIndex, evButtonShortPressedInternal, this));
 }
 
 void ButtonEventsHandler::onButtonLongPressed(uint16_t buttonIndex)
 {
-    // Trace::out("ButtonEventsHandler: Button %d LONG", buttonIndex);
+    Trace::out("ButtonEventsHandler: Button %d LONG PRESSED - pushing internal event", buttonIndex);
     // Push internal event to decouple the call
     GEN(evButtonInternal(buttonIndex, evButtonLongPressedInternal, this));
 }
@@ -146,7 +146,7 @@ XFEventStatus ButtonEventsHandler::processEvent()
 
     if (currentEvent->getEventType() == XFEvent::Initial)
     {
-        // Trace::out("ButtonEventsHandler: Initial");
+        Trace::out("ButtonEventsHandler: Initial state");
         return XFEventStatus::Consumed;
     }
 
@@ -159,7 +159,7 @@ XFEventStatus ButtonEventsHandler::processEvent()
         case evButtonShortPressedInternal:
             {
                 const evButtonInternal * event = static_cast<const evButtonInternal *>(currentEvent);
-                // Trace::out("ButtonEventsHandler: Short[%d]", event->buttonIndex);
+                Trace::out("ButtonEventsHandler: Processing internal short press event for button %d", event->buttonIndex);
                 notifyButtonShortPressed(event->buttonIndex);
             }
             return XFEventStatus::Consumed;
@@ -167,7 +167,7 @@ XFEventStatus ButtonEventsHandler::processEvent()
         case evButtonLongPressedInternal:
             {
                 const evButtonInternal * event = static_cast<const evButtonInternal *>(currentEvent);
-                // Trace::out("ButtonEventsHandler: Long[%d]", event->buttonIndex);
+                Trace::out("ButtonEventsHandler: Processing internal long press event for button %d", event->buttonIndex);
                 notifyButtonLongPressed(event->buttonIndex);
             }
             return XFEventStatus::Consumed;
@@ -182,7 +182,7 @@ XFEventStatus ButtonEventsHandler::processEvent()
 
 void ButtonEventsHandler::notifyButtonShortPressed(ButtonIndex buttonIndex)
 {
-    // Trace removed to save stack
+    Trace::out("ButtonEventsHandler: Notifying %d observers about button %d short press", observerCount_, buttonIndex);
     for (uint16_t i = 0; i < observerCount_; i++)
     {
         if (observers_[i])
@@ -194,7 +194,7 @@ void ButtonEventsHandler::notifyButtonShortPressed(ButtonIndex buttonIndex)
 
 void ButtonEventsHandler::notifyButtonLongPressed(ButtonIndex buttonIndex)
 {
-    // Trace removed to save stack
+    Trace::out("ButtonEventsHandler: Notifying %d observers about button %d long press", observerCount_, buttonIndex);
     for (uint16_t i = 0; i < observerCount_; i++)
     {
         if (observers_[i])

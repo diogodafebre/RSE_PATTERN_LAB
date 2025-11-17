@@ -59,7 +59,7 @@ XFEventStatus ButtonsController::processEvent()
 
     if (currentEvent->getEventType() == XFEvent::Initial)
     {
-        // Trace::out("ButtonsController: Initial - polling started");
+        Trace::out("ButtonsController: Initial state - starting periodic polling");
         // Start periodic polling
         pushEvent(evPollButtons, POLL_INTERVAL_MS);
         return XFEventStatus::Consumed;
@@ -79,7 +79,7 @@ XFEventStatus ButtonsController::processEvent()
 
         case evButtonIrq:
             // ISR triggered - poll buttons immediately
-            // Trace::out("ButtonsController: IRQ");
+            Trace::out("ButtonsController: IRQ received - polling buttons");
             pollButtons();
             return XFEventStatus::Consumed;
 

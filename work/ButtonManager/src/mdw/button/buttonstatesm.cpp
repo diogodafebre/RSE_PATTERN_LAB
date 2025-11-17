@@ -31,13 +31,13 @@ XFEventStatus ButtonStateSm::processEvent()
     case STATE_IDLE:
         if (currentEvent->getEventType() == XFEvent::Initial)
         {
-            // Trace::out("ButtonStateSm[%d]: Initial state", buttonIndex_);
+            Trace::out("ButtonStateSm[%d]: Initial state", buttonIndex_);
             state_ = STATE_IDLE;
             return XFEventStatus::Consumed;
         }
         else if (eventId == evButtonPressed)
         {
-            // Trace::out("ButtonStateSm[%d]: Button pressed", buttonIndex_);
+            Trace::out("ButtonStateSm[%d]: Button pressed, waiting for release or timeout", buttonIndex_);
             state_ = STATE_PRESSED;
             // Start timeout for long press detection
             pushEvent(evLongPressTimeout, LONG_PRESS_TIMEOUT_MS);
@@ -48,7 +48,7 @@ XFEventStatus ButtonStateSm::processEvent()
     case STATE_PRESSED:
         if (eventId == evButtonReleased)
         {
-            Trace::out("BTN[%d]: SHORT", buttonIndex_);
+            Trace::out("ButtonStateSm[%d]: Button released before timeout - SHORT PRESS", buttonIndex_);
             state_ = STATE_SHORT_PRESSED;
             // Notify callback about short press
             if (callback_)
@@ -61,7 +61,7 @@ XFEventStatus ButtonStateSm::processEvent()
         }
         else if (eventId == evLongPressTimeout)
         {
-            Trace::out("BTN[%d]: LONG", buttonIndex_);
+            Trace::out("ButtonStateSm[%d]: Timeout reached while pressed - LONG PRESS", buttonIndex_);
             state_ = STATE_LONG_PRESSED;
             // Notify callback about long press
             if (callback_)
@@ -75,7 +75,7 @@ XFEventStatus ButtonStateSm::processEvent()
     case STATE_LONG_PRESSED:
         if (eventId == evButtonReleased)
         {
-            // Trace::out("ButtonStateSm[%d]: Released", buttonIndex_);
+            Trace::out("ButtonStateSm[%d]: Button released after long press", buttonIndex_);
             state_ = STATE_IDLE;
             return XFEventStatus::Consumed;
         }
