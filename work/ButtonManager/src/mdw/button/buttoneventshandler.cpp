@@ -1,4 +1,5 @@
 #include "buttoneventshandler.h"
+#include "interface/buttoneventshandlerobserver.h"
 #include "trace/trace.h"
 #include "xf/customevent.h"
 

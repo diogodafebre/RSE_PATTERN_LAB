@@ -27,14 +27,14 @@ public:
 
     void start();
 
-    // ButtonIrq interface
-protected:
+    // ButtonIrq interface - public to allow ISR to call it
     void onIrq() override;
 
     // ButtonsControllerCallbackCaller interface
-protected:
     bool registerCallback(interface::ButtonsControllerCallbackProvider * callbackProvider,
                          interface::ButtonsControllerCallbackProvider::CallbackMethod callbackMethod) override;
+
+protected:
 
     // XFBehavior interface
 protected:

@@ -43,7 +43,9 @@ void Factory::initialize()
     // Register callback from ButtonsController to ButtonEventsHandler
     success = getButtonsController().registerCallback(
         &getButtonEventsHandler(),
-        &ButtonEventsHandler::onButtonChanged
+        static_cast<interface::ButtonsControllerCallbackProvider::CallbackMethod>(
+            &ButtonEventsHandler::onButtonChanged
+        )
     );
     assert(success && "Failed to register ButtonsController callback");
 
